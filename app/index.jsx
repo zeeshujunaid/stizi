@@ -16,7 +16,7 @@ export default function Index() {
         <Text style={styles.title}>Tasbeeh aur Namaz App mein Khush Aamdeed</Text>
 
 
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/(auth)/login")}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/(tabs)/home")}>
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
 

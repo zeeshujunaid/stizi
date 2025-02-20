@@ -68,7 +68,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="meesage"
                 options={{
-                    tabBarIcon: ({ color }) => <TabBarIcon name="meesage" color={color} />,
+                    tabBarIcon: ({ color }) => <TabBarIcon name="message-text" color={color} />,
                     tabBarLabel: 'meesage', // Add label for clarity
                 }}
             />
