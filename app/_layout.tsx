@@ -1,39 +1,29 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import Toast from 'react-native-toast-message'; // Correct import
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+export const unstable_settings = {
+  initialRouteName: 'index',
+};
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        {/* Expo Router Stack Navigation */}
+        <Stack
+          screenOptions={{ headerShown: false }}
+          initialRouteName="index"
+        >
+          <Stack.Screen name="(tabs)/home" options={{ headerShown: true }} />
+          <Stack.Screen name="CustomHeader" options={{ headerShown: true }} />
+          <Stack.Screen name="(tabs)/profile" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)/meesage" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)/singup" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
+        </Stack>
+
+        {/* Toast Component */}
+        <Toast />
+      </GestureHandlerRootView>
   );
 }
