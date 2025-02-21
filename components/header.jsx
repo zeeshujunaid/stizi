@@ -24,7 +24,10 @@ export default function CustomHeader() {
   return (
     <View style={styles.header}>
       {/* Back Button */}
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
         <FontAwesome name="arrow-left" size={20} color="white" />
       </TouchableOpacity>
 

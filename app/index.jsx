@@ -6,7 +6,7 @@ export default function WelcomeScreen() {
 
   return (
     <ImageBackground 
-      source={{ uri: "https://source.unsplash.com/featured/?city,map,roads" }} 
+      source={{ uri: "https://static1.anpoimages.com/wordpress/wp-content/uploads/2022/07/googleMapsTricksHero.jpg" }} 
       style={styles.background}
     >
       <View style={styles.overlay}>
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#00FF7F", // Neon Green for futuristic look
+    color: "#00FF7F", 
     textAlign: "center",
     marginBottom: 20,
   },
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   button: {
-    backgroundColor: "#00BFFF", // Sky Blue for map/navigation theme
+    backgroundColor: "#00BFFF", 
     paddingVertical: 14,
     paddingHorizontal: 40,
     borderRadius: 30,
