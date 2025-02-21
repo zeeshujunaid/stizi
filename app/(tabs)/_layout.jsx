@@ -7,35 +7,28 @@ export default function TabLayout() {
         <Tabs
             screenOptions={{
                 headerShown: false,
-                tabBarShowLabel: true, // Show labels for better accessibility
+                tabBarShowLabel: true,
                 tabBarLabelStyle: {
-                    fontSize: 12, // Smaller font size for the labels
+                    fontSize: 12,
                     fontWeight: '600',
-                    color: '#6a6a6a', // Default inactive label color
+                    color: '#D9A8FF', // Light purple text color
                 },
                 tabBarStyle: {
-                    position: 'absolute', // Ensure it's fixed at the bottom
-                    bottom: 5, // Fix tab bar at the bottom
+                    position: 'absolute',
+                    bottom: 5,
                     left: 20,
                     right: 20,
                     height: 60,
-                    borderRadius: 50, // Adjusted height for a more balanced look
-                    // borderTopLeftRadius: 20, // Subtle rounded top corners
-                    // borderTopRightRadius: 20, // Subtle rounded top corners
-                    // borderBottomLeftRadius: 0, // Fixed bottom corners
-                    // borderBottomRightRadius: 0, // Fixed bottom corners
-                    backgroundColor: '#320270', // White background for clean design
+                    borderRadius: 50,
+                    backgroundColor: '#4a004a', // Deep purple background
                     shadowColor: '#000',
                     shadowOffset: { width: 0, height: 5 },
                     shadowOpacity: 0.1,
                     shadowRadius: 10,
                     elevation: 10,
-
-
                 },
-                tabBarActiveTintColor: '#40cf47', // Active tab icon color
-                tabBarInactiveTintColor: '#A4D7A6', // Inactive tab icon color
-
+                tabBarActiveTintColor: '#FF66FF', // Pinkish purple for active icon
+                tabBarInactiveTintColor: '#D9A8FF', // Light purple for inactive icon
             }}
         >
             {/* Home Tab */}
@@ -43,33 +36,24 @@ export default function TabLayout() {
                 name="home"
                 options={{
                     tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-                    tabBarLabel: 'Home', // Add label for clarity
+                    tabBarLabel: 'Home',
                 }}
             />
 
-            {/* quiz Tab (Custom Center Button) */}
+            {/* Profile Tab */}
             <Tabs.Screen
                 name="profile"
                 options={{
-                    tabBarIcon: ({ focused }) => (
-                        <View
-                            style={[
-                                styles.centerButton,
-                                { backgroundColor: focused ? '#66BB6A' : '#4CAF50' }, // Active/inactive background color
-                            ]}
-                        >
-                            <TabBarIcon name="plus" color="white" />
-                        </View>
-                    ),
-                    tabBarLabel: 'profile', // Add label for clarity
+                    tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />, // Corrected to "user"
+                    tabBarLabel: 'Profile',
                 }}
             />
 
+            {/* Message Tab */}
             <Tabs.Screen
-                name="meesage"
+                name="message"
                 options={{
-                    tabBarIcon: ({ color }) => <TabBarIcon name="message-text" color={color} />,
-                    tabBarLabel: 'meesage', // Add label for clarity
+                    tabBarIcon: ({ color }) => <TabBarIcon name="commenting" color={color} />, // Corrected to "comment"
                 }}
             />
         </Tabs>
@@ -78,15 +62,16 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
     centerButton: {
-        width: 40, // Slightly increased size for prominence
-        height: 40,
-        borderRadius: 35,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'absolute', // Position above the tab bar
-        bottom: 0, // Position the button at the very bottom
-        left: '90%',
-        transform: [{ translateX: -35 }], // Center the button horizontally
+        position: 'absolute',
+        bottom: 0,
+        left: '50%',
+        transform: [{ translateX: -25 }],
+        backgroundColor: '#9c27b0', // Purple button color
         shadowColor: '#4CAF50',
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.3,

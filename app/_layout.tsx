@@ -18,7 +18,7 @@ export default function RootLayout() {
           <Stack.Screen name="CustomHeader" options={{ headerShown: true }} />
           <Stack.Screen name="(tabs)/profile" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)/meesage" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)/singup" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)/signup" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
         </Stack>
 

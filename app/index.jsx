@@ -1,22 +1,24 @@
 import { View, Text, TouchableOpacity, ImageBackground, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 
-export default function Index() {
+export default function WelcomeScreen() {
   const router = useRouter();
 
   return (
     <ImageBackground 
-      source={{ uri: "https://www.shutterstock.com/shutterstock/videos/3484165189/thumb/1.jpg?ip=x480" }} 
+      source={{ uri: "https://source.unsplash.com/featured/?city,map,roads" }} 
       style={styles.background}
     >
       <View style={styles.overlay}>
         
-        <Text style={styles.heading}>✨ Assalamu Alaikum ✨</Text>
+        <Text style={styles.heading}>🌍 Welcome to Stizi 🚀</Text>
 
-        <Text style={styles.title}>Tasbeeh aur Namaz App mein Khush Aamdeed</Text>
+        <Text style={styles.title}>Your Smart Map Companion</Text>
+        <Text style={styles.description}>
+          Discover places, navigate with ease, and explore the world with Stizi.
+        </Text>
 
-
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/(tabs)/home")}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/(auth)/signup")}>
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
 
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.6)", // Dark semi-transparent overlay
+    backgroundColor: "rgba(0, 0, 0, 0.6)", // Semi-transparent overlay
     flex: 1,
     width: "100%",
     justifyContent: "center",
@@ -43,7 +45,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#FFD700", // Gold color for heading
+    color: "#00FF7F", // Neon Green for futuristic look
     textAlign: "center",
     marginBottom: 20,
   },
@@ -52,23 +54,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
     textAlign: "center",
-    marginBottom: 30,
+    marginBottom: 10,
   },
   description: {
     fontSize: 18,
-    color: "#fff",
+    color: "#D3D3D3",
     textAlign: "center",
-    marginBottom: 15,
-  },
-  footerText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFD700",
-    textAlign: "center",
-    marginVertical: 20,
+    marginBottom: 25,
   },
   button: {
-    backgroundColor: "#FFA500",
+    backgroundColor: "#00BFFF", // Sky Blue for map/navigation theme
     paddingVertical: 14,
     paddingHorizontal: 40,
     borderRadius: 30,

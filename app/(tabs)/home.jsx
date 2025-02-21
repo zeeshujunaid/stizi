@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Button, Text, Modal, TextInput, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import Header from "../../components/header"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { collection, addDoc, getDocs, getFirestore } from "firebase/firestore";
 import { app } from "../../utils/firebase";
@@ -94,6 +95,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <Header style={styles.Header}/>
       {permissionDenied ? (
         <View style={styles.permissionContainer}>
           <Text style={styles.text}>Location permission is required!</Text>
@@ -150,6 +152,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  Header:{position:"absolute",top:0,width:"100%"},
   map: { width: "100%", height: "100%" },
   permissionContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
   text: { fontSize: 16, marginBottom: 10 },
@@ -157,8 +160,8 @@ const styles = StyleSheet.create({
   markerText: { color: "white", fontWeight: "bold", textAlign: "center" },
   floatingButton: {
     position: "absolute",
-    top: 20,
-    right: 20,
+    top: 90,
+    right: 5,
     backgroundColor: "blue",
     paddingVertical: 10,
     paddingHorizontal: 15,

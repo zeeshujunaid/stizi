@@ -1,250 +1,123 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  Image,
-  PermissionsAndroid,
-} from "react-native";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../../utils/firebase";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { app } from "../../utils/firebase"; // Firebase config
 import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { collection, doc, setDoc } from "firebase/firestore";
-import Toast from "react-native-toast-message";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import * as Location from "expo-location";
 
-const SignUpScreen = () => {
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+export default function SignupScreen() {
   const router = useRouter();
-
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [location, setLocation] = useState(null);
+  const [name, setName] = useState("");
+  const [step, setStep] = useState("phone"); // phone, email, name
+  const [signupMode, setSignupMode] = useState("phone"); // 'phone' or 'email'
 
-  // 📍 Get User Location Function
-  const getCurrentLocation = async () => {
+  // ✅ Save User Data (Email Signup)
+  const signupWithEmail = async () => {
     try {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        Toast.show({
-          type: "error",
-          text1: "Location Permission Denied",
-          text2: "Enable location to continue.",
-        });
-        return;
-      }
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location.coords);
-    } catch (error) {
-      console.error("Error getting location:", error);
-    }
-  };
-
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
-
-  const handleSignup = async () => {
-    if (email !== "" && password !== "" && location) {
-      setLoading(true);
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(async (userCredential) => {
-          const user = userCredential.user;
-
-          Toast.show({
-            type: "success",
-            text1: "Account Created",
-            text2: "Welcome to Tasbeeh & Prayer App!",
-          });
-
-          const userData = {
-            email: email,
-            name: name,
-            uid: user.uid,
-            latitude: location.latitude,
-            longitude: location.longitude,
-          };
-
-          await AsyncStorage.setItem("info", JSON.stringify(userData));
-
-          await setDoc(doc(collection(db, "users"), user.uid), userData);
-
-          router.push("/(tabs)/home");
-          setName("");
-          setEmail("");
-          setPassword("");
-          setLoading(false);
-        })
-        .catch((error) => {
-          setLoading(false);
-          Toast.show({
-            type: "error",
-            text1: "Signup Failed",
-            text2: error.message,
-          });
-        });
-    } else {
-      Toast.show({
-        type: "error",
-        text1: "Invalid Input",
-        text2: "Please fill out all fields and allow location access.",
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      await setDoc(doc(db, "users", user.uid), {
+        name: name,
+        email: user.email,
       });
+
+      Alert.alert("Signup Successful", "Your account has been created!");
+      router.push("/(tabs)/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
     }
   };
 
   return (
-    <View style={styles.background}>
-      <View style={styles.container}>
-        <Image
-          source={{ uri: "https://www.shutterstock.com/shutterstock/videos/3484165189/thumb/1.jpg?ip=x480" }}
-          style={styles.logo}
-        />
-        <Text style={styles.heading}>Create an Account</Text>
-        <Text style={styles.subheading}>Sign up to start your prayer journey</Text>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Welcome to</Text>
+      <Text style={styles.headingsecond}>STIZI</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          placeholderTextColor="#A9A9A9"
-          value={name}
-          onChangeText={setName}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#A9A9A9"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
-        />
-
-        <View style={styles.passwordContainer}>
+      {signupMode === "phone" && (
+        <>
           <TextInput
-            style={styles.inputWithIcon}
-            placeholder="Password"
-            placeholderTextColor="#A9A9A9"
-            secureTextEntry={!showPassword}
+            style={styles.input}
+            placeholder="Enter Phone Number"
+            keyboardType="phone-pad"
+            value={email} // Keeping the state name same
+            onChangeText={setEmail}
+          />
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Send OTP</Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      {signupMode === "email" && step === "email" && (
+        <>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Password"
+            secureTextEntry
             value={password}
             onChangeText={setPassword}
           />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <FontAwesome name={showPassword ? "eye-slash" : "eye"} size={20} color="#A9A9A9" />
+          <TouchableOpacity style={styles.button} onPress={() => setStep("name")}>
+            <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
-        </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={loading}>
-          {loading ? (
-            <ActivityIndicator size={25} color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Sign Up</Text>
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => router.push("/(auth)/login")}>
+            <Text style={styles.buttonText}>login</Text>
+          </TouchableOpacity>
+        </>
+      )}
 
-        <Text style={styles.footerText}>
-          Already have an account? {" "}
-          <Text style={styles.linkText} onPress={() => router.push("/login")}>
-            Log In
-          </Text>
-        </Text>
+      {step === "name" && signupMode === "email" && (
+        <>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Your Name"
+            value={name}
+            onChangeText={setName}
+          />
+          <TouchableOpacity style={styles.button} onPress={signupWithEmail}>
+            <Text style={styles.buttonText}>Complete Signup</Text>
+          </TouchableOpacity>
 
-        <Toast />
-      </View>
+
+
+        </>
+      )}
+
+      <TouchableOpacity onPress={() => {
+        setSignupMode("email");
+        setStep("email");
+      }}>
+        <Text style={styles.link}>{signupMode === "phone" ? "Signup with Email" : "Signup with Phone"}</Text>
+      </TouchableOpacity>
+      <Text style={styles.description}>
+        Stizi shares the same ecosystem as Sidenote, with both apps using the same login for a seamless experience.
+      </Text>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5F3E0",
-    padding: 20,
-  },
-  container: {
-    width: "100%",
-    maxWidth: 400,
-    padding: 25,
-    borderRadius: 12,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    elevation: 5,
-  },
-  logo: {
-    width: 130,
-    height: 120,
-    resizeMode: "contain",
-    marginBottom: 15,
-  },
-  heading: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#4A7C59",
-    marginBottom: 5,
-    textAlign: "center",
-  },
-  subheading: {
-    fontSize: 15,
-    color: "#777",
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  input: {
-    width: "100%",
-    padding: 12,
-    borderColor: "#4A7C59",
-    borderWidth: 1,
-    borderRadius: 8,
-    backgroundColor: "#FFF",
-    marginBottom: 12,
-    fontSize: 16,
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    borderColor: "#4A7C59",
-    borderWidth: 1,
-    borderRadius: 8,
-    backgroundColor: "#FFF",
-    paddingRight: 10,
-    marginBottom: 12,
-  },
-  inputWithIcon: {
-    flex: 1,
-    padding: 12,
-    fontSize: 16,
-  },
-  button: {
-    width: "100%",
-    paddingVertical: 14,
-    backgroundColor: "#4A7C59",
-    borderRadius: 25,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  footerText: {
-    fontSize: 14,
-    color: "#000",
-    marginTop: 10,
-  },
-  linkText: {
-    color: "#4A7C59",
-    fontWeight: "bold",
-  },
+  container: { flex: 1, padding: 20, backgroundColor: "#6200EE", alignItems: "center", gap: 40 },
+  heading: { fontSize: 20, fontWeight: "bold", color: "#fff", marginTop: 20 },
+  headingsecond: { fontSize: 44, fontWeight: "bold", marginBottom: 20, color: "#fff", width: "70%", textAlign: "center" },
+  input: { width: "90%", padding: 10, borderWidth: 1, borderRadius: 10, marginBottom: 10, marginTop: 30, backgroundColor: "#fff" },
+  button: { backgroundColor: "#007bff", padding: 10, borderRadius: 5, alignItems: "center", width: "50%" },
+  buttonText: { color: "#fff", fontSize: 16 },
+  link: { marginTop: 10, textDecorationLine: "underline", color: "#fff" },
+  description: { marginTop: 20, textAlign: "center", color: "#fff" }
 });
-
-export default SignUpScreen;

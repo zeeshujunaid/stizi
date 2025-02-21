@@ -1,11 +1,25 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { getAuth, signOut } from "firebase/auth";
 
 export default function CustomHeader() {
   const navigation = useNavigation();
-  const route = useRoute(); // Current screen ka name get karne ke liye
+  const route = useRoute();
+  const router = useRouter();
+  const auth = getAuth();
+
+  // Logout Function
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/login"); // Redirect to login after successful logout
+    } catch (error) {
+      Alert.alert("Logout Failed", error.message); // Show error in alert
+    }
+  };
 
   return (
     <View style={styles.header}>
@@ -17,9 +31,9 @@ export default function CustomHeader() {
       {/* Page Name */}
       <Text style={styles.title}>{route.name}</Text>
 
-      {/* Optional: Add right side button */}
-      <TouchableOpacity onPress={() => alert("Settings Clicked")} style={styles.rightButton}>
-        <FontAwesome name="cog" size={20} color="white" />
+      {/* Logout Button */}
+      <TouchableOpacity onPress={handleLogout} style={styles.rightButton}>
+        <FontAwesome name="sign-out" size={20} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -27,10 +41,12 @@ export default function CustomHeader() {
 
 const styles = StyleSheet.create({
   header: {
-    height: "20%",
+    height: "10%",
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
     width: "100%",
-    paddingTop: 80,
-    backgroundColor: "#6200EE", // Purple Theme
+    paddingTop: 3,
+    backgroundColor: "#6200EE",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
