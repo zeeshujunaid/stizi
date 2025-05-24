@@ -19,7 +19,7 @@ export default function WelcomeScreen() {
         </Text>
 
         <TouchableOpacity style={styles.button} onPress={() => router.push("/(auth)/signup")}>
-          <Text style={styles.buttonText}>Get Started now with stizi</Text>
+          <Text style={styles.buttonText}>Get Started with stizi</Text>
         </TouchableOpacity>
 
       </View>
