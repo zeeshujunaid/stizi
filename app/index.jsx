@@ -15,7 +15,6 @@ export default function WelcomeScreen() {
 
         <Text style={styles.title}>Your Smart Map Companion</Text>
         <Text style={styles.description}>
-          Discover places, navigate with ease, and explore the world with Stizi.
         </Text>
 
         <TouchableOpacity style={styles.button} onPress={() => router.push("/(auth)/signup")}>
